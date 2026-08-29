@@ -7,6 +7,7 @@ export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
   const googleBtnRef = useRef(null);
   const navigate = useNavigate();
   const { setUser } = useAuth();
@@ -72,16 +73,26 @@ export default function Register() {
             <label>Email</label>
             <input type="email" name="email" value={form.email} onChange={handleChange} required />
           </div>
-          <div className="form-group">
+                   <div className="form-group">
             <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              minLength={6}
-              required
-            />
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                minLength={6}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? "Creating account..." : "Sign Up"}

@@ -7,6 +7,8 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+const [showPassword, setShowPassword] = useState(false);
+
   const googleBtnRef = useRef(null);
   const navigate = useNavigate();
   const { setUser } = useAuth();
@@ -28,7 +30,7 @@ export default function Login() {
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleGoogleResponse,
       });
-                google.accounts.id.renderButton(googleBtnRef.current, {
+     google.accounts.id.renderButton(googleBtnRef.current, {
         theme: "outline",
         size: "large",
         width: Math.min(320, googleBtnRef.current.offsetWidth || 320),
@@ -69,15 +71,25 @@ export default function Login() {
             <label>Email</label>
             <input type="email" name="email" value={form.email} onChange={handleChange} required />
           </div>
-          <div className="form-group">
+                    <div className="form-group">
             <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Log In"}
