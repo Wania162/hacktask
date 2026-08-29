@@ -15,10 +15,10 @@ const sendTokenResponse = (user, statusCode, res) => {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
 
-  res.cookie("token", token, {
+   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.COOKIE_SECURE === "true",
-    sameSite: "lax",
+    sameSite: process.env.COOKIE_SECURE === "true" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -117,7 +117,12 @@ router.post("/google", async (req, res) => {
 
 // LOGOUT
 router.post("/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: process.env.COOKIE_SECURE === "true",
+    sameSite: process.env.COOKIE_SECURE === "true" ? "none" : "lax",
+    expires: new Date(0),
+  });
   res.status(200).json({ message: "Logged out" });
 });
 
@@ -133,7 +138,6 @@ router.get("/me", protect, (req, res) => {
   });
 });
 
-// FORGOT PASSWORD
 // FORGOT PASSWORD - OTP email par bhejta hai
 router.post("/forgot-password", async (req, res) => {
   try {
